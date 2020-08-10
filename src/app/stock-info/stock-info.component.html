@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row">
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="onRefresh()"
+      [disabled]="isTimeOut"
+    >
+      {{ isTimeOut ? 'One refresh per minute!' : 'Refresh stocks!' }}
+    </button>
+  </div>
+
+  <div @fadeIn class="row">
+    <h2 *ngIf="stocks.length > 0">Stock info</h2>
+  </div>
+  <div class="row">
+    <div @fadeIn *ngFor="let stockEl of stocks" class="col-xs-2">
+      <p>Symbol: {{ stockEl.symbol }}</p>
+      <p>Price: ${{ stockEl.price }}/ea</p>
+      <p>Open: ${{ stockEl.openingValue }}/ea</p>
+      <p>High: ${{ stockEl.highestValue }}/ea</p>
+      <p>Low: ${{ stockEl.lowestValue }}/ea</p>
+      <p>Previous close: {{ stockEl.previousClose }}</p>
+      <p>Volume: {{ stockEl.volume }}</p>
+      <p>
+        Change in value:
+        <span
+          [ngClass]="{
+            up: stockEl.changeInValue > 0,
+            down: stockEl.changeInValue < 0
+          }"
+          >{{ stockEl.changeInValue }}</span
+        >
+      </p>
+      <p>
+        Change in percent:
+        <span
+          [ngClass]="{
+            up: stockEl.changeInValue > 0,
+            down: stockEl.changeInValue < 0
+          }"
+          >{{ stockEl.changePercent }}</span
+        >
+      </p>
+      <p>Last traded: {{ stockEl.latestTradingDay }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+.up {
+  color: green;
+}
+
+.down {
+  color: red;
+}
+
+.col-xs-2 {
+  padding: 1px;
+  margin: 1px;
+  border-style: solid;
+}
