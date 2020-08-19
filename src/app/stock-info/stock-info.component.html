@@ -17,11 +17,22 @@
     <div @fadeIn *ngFor="let stockEl of stocks" class="col-xs-2">
       <p>Symbol: {{ stockEl.symbol }}</p>
       <p>Price: ${{ stockEl.price }}/ea</p>
+      <p>Bought at: ${{ stockEl.boughtValue }}/ea</p>
+      <p>
+        Personal Performance:
+        <span
+          [ngClass]="{
+            up: stockEl.price - stockEl.boughtValue > 0,
+            down: stockEl.price - stockEl.boughtValue < 0
+          }"
+          >{{ (stockEl.price - stockEl.boughtValue).toFixed(2) }}
+          {{ stockEl.price - stockEl.boughtValue > 0 ? 'up' : 'down' }}!</span
+        >
+      </p>
       <p>Open: ${{ stockEl.openingValue }}/ea</p>
       <p>High: ${{ stockEl.highestValue }}/ea</p>
       <p>Low: ${{ stockEl.lowestValue }}/ea</p>
       <p>Previous close: {{ stockEl.previousClose }}</p>
-      <p>Volume: {{ stockEl.volume }}</p>
       <p>
         Change in value:
         <span

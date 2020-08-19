@@ -9,6 +9,7 @@ export class Stock {
   previousClose: number;
   changeInValue: number;
   changePercent: string;
+  boughtValue: number;
 
   constructor(
     symbol: string,
@@ -20,7 +21,8 @@ export class Stock {
     latestTradingDay: string,
     previousClose: number,
     changeInValue: number,
-    changePercent: string
+    changePercent: string,
+    boughtValue: number
   ) {
     this.symbol = symbol;
     this.openingValue = openingValue;
@@ -32,5 +34,6 @@ export class Stock {
     this.previousClose = previousClose;
     this.changeInValue = changeInValue;
     this.changePercent = changePercent;
+    this.boughtValue = boughtValue;
   }
 }

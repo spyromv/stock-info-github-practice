@@ -8,7 +8,11 @@ import { Stock } from './stock.model';
 })
 export class StockInfoService {
   stocksSubject = new Subject<Stock[]>();
-  symbols = ['AMD', 'V', 'MSFT', 'SNE', 'KO'];
+  stockQueries = [
+    { symbol: 'AMD', boughtValue: 85.06 },
+    { symbol: 'V', boughtValue: 196.36 },
+    { symbol: 'MSFT', boughtValue: 211.4 },
+  ];
 
   constructor(private http: HttpClient) {}
 
@@ -18,27 +22,43 @@ export class StockInfoService {
       'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=';
     const lastUrlPart = '&apikey=D1LFU6TNBA1BULHI';
 
-    for (const symbol of this.symbols) {
-      const finalUrl = firstUrlPart + symbol + lastUrlPart;
+    for (const query of this.stockQueries) {
+      const finalUrl = firstUrlPart + query.symbol + lastUrlPart;
       this.http.get(finalUrl).subscribe((data) => {
-        if (data['Global Quote']['01. symbol']) {
-          stocks.push(
-            new Stock(
-              data['Global Quote']['01. symbol'],
-              data['Global Quote']['02. open'],
-              data['Global Quote']['03. high'],
-              data['Global Quote']['04. low'],
-              data['Global Quote']['05. price'],
-              data['Global Quote']['06. volume'],
-              data['Global Quote']['07. latest trading day'],
-              data['Global Quote']['08. previous close'],
-              data['Global Quote']['09. change'],
-              data['Global Quote']['10. change percent']
-            )
-          );
+        const dataToParse = data['Global Quote'];
+        if (dataToParse) {
+          stocks.push(this.buildStock(dataToParse, query.boughtValue));
           this.stocksSubject.next(stocks);
         }
       });
     }
+  }
+
+  private buildStock(dataToParse, boughtValue: number): Stock {
+    const symbol = dataToParse['01. symbol'];
+    const open: number = +dataToParse['02. open'];
+    const high: number = +dataToParse['03. high'];
+    const low: number = +dataToParse['04. low'];
+    const price: number = +dataToParse['05. price'];
+    const volume = dataToParse['06. volume'];
+    const latestTrade = dataToParse['07. latest trading day'];
+    const prevClose: number = +dataToParse['08. previous close'];
+    const change: number = +dataToParse['09. change'];
+    const changePercentage = dataToParse['10. change percent'];
+
+    const newStock = new Stock(
+      symbol,
+      +open.toFixed(2),
+      +high.toFixed(2),
+      +low.toFixed(2),
+      +price.toFixed(2),
+      volume,
+      latestTrade,
+      +prevClose.toFixed(2),
+      +change.toFixed(2),
+      changePercentage,
+      boughtValue
+    );
+    return newStock;
   }
 }
