@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row">
+<div class="row">
+  <div class="col-xs-12">
     <button
       class="btn btn-primary"
       type="button"
@@ -8,30 +8,41 @@
     >
       {{ isTimeOut ? 'One refresh per minute!' : 'Refresh stocks!' }}
     </button>
+    <button class="btn btn-warning" type="button" (click)="onGoToQueries()">
+      Define Stock Queries
+    </button>
   </div>
+</div>
 
-  <div @fadeIn class="row">
+<div @fadeIn class="row">
+  <div class="col-xs-12">
     <h2 *ngIf="stocks.length > 0">Stock info</h2>
   </div>
-  <div class="row">
-    <div @fadeIn *ngFor="let stockEl of stocks" class="col-xs-2">
-      <p>Symbol: {{ stockEl.symbol }}</p>
-      <p>Price: ${{ stockEl.price }}/ea</p>
-      <p>Bought at: ${{ stockEl.boughtValue }}/ea</p>
-      <p>
-        Personal Performance:
-        <span
-          [ngClass]="{
-            up: stockEl.price - stockEl.boughtValue > 0,
-            down: stockEl.price - stockEl.boughtValue < 0
-          }"
-          >{{ (stockEl.price - stockEl.boughtValue).toFixed(2) }}
-          {{ stockEl.price - stockEl.boughtValue > 0 ? 'up' : 'down' }}!</span
-        >
-      </p>
-      <p>Open: ${{ stockEl.openingValue }}/ea</p>
-      <p>High: ${{ stockEl.highestValue }}/ea</p>
-      <p>Low: ${{ stockEl.lowestValue }}/ea</p>
+</div>
+
+<div class="row">
+  <div @fadeIn *ngFor="let stockEl of stocks" class="col-3">
+    <p>Symbol: {{ stockEl.symbol }}</p>
+    <p>Last traded: {{ stockEl.latestTradingDay }}</p>
+    <p>Price: ${{ stockEl.price }}</p>
+    <p>Bought at: ${{ stockEl.boughtAt }}</p>
+    <p>Quantity: {{ stockEl.quantity }}</p>
+    <p>
+      Personal Performance:
+      <span
+        [ngClass]="{
+          up: stockEl.price - stockEl.boughtAt > 0,
+          down: stockEl.price - stockEl.boughtAt < 0
+        }"
+        >{{
+          ((stockEl.price - stockEl.boughtAt) * stockEl.quantity).toFixed(2)
+        }}
+        {{ stockEl.price - stockEl.boughtAt > 0 ? 'up' : 'down' }}!</span
+      >
+    </p>
+    <!-- <p>Open: ${{ stockEl.openingValue }}</p>
+      <p>High: ${{ stockEl.highestValue }}</p>
+      <p>Low: ${{ stockEl.lowestValue }}</p>
       <p>Previous close: {{ stockEl.previousClose }}</p>
       <p>
         Change in value:
@@ -52,8 +63,6 @@
           }"
           >{{ stockEl.changePercent }}</span
         >
-      </p>
-      <p>Last traded: {{ stockEl.latestTradingDay }}</p>
-    </div>
+      </p> -->
   </div>
 </div>

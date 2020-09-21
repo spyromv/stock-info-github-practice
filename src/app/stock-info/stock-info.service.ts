@@ -1,6 +1,7 @@
+import { StockQuery } from './../stock-info-query-data/stock-query.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Stock } from './stock.model';
 
 @Injectable({
@@ -8,11 +9,9 @@ import { Stock } from './stock.model';
 })
 export class StockInfoService {
   stocksSubject = new Subject<Stock[]>();
-  stockQueries = [
-    { symbol: 'AMD', boughtValue: 85.06 },
-    { symbol: 'V', boughtValue: 196.36 },
-    { symbol: 'MSFT', boughtValue: 211.4 },
-  ];
+  querySubject = new Subject<StockQuery[]>();
+
+  stockQueries: StockQuery[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -27,14 +26,43 @@ export class StockInfoService {
       this.http.get(finalUrl).subscribe((data) => {
         const dataToParse = data['Global Quote'];
         if (dataToParse) {
-          stocks.push(this.buildStock(dataToParse, query.boughtValue));
-          this.stocksSubject.next(stocks);
+          stocks.push(
+            this.buildStock(dataToParse, query.boughtAt, query.quantity)
+          );
         }
       });
     }
+    this.stocksSubject.next(stocks);
   }
 
-  private buildStock(dataToParse, boughtValue: number): Stock {
+  getStockQueries(): StockQuery[] {
+    return this.stockQueries;
+  }
+
+  setStockQueries(newQueries: StockQuery[]): void {
+    this.stockQueries = newQueries;
+    this.storeStockQueries();
+    this.querySubject.next(this.stockQueries);
+  }
+
+  fetchStockQueries(): void {
+    this.http
+      .get('https://stock-info-practice.firebaseio.com/queries.json')
+      .subscribe((queries: StockQuery[]) => {
+        this.setStockQueries(queries);
+      });
+  }
+
+  storeStockQueries(): void {
+    this.http
+      .put(
+        'https://stock-info-practice.firebaseio.com/queries.json',
+        this.stockQueries
+      )
+      .subscribe();
+  }
+
+  private buildStock(dataToParse, boughtAt: number, quantity: number): Stock {
     const symbol = dataToParse['01. symbol'];
     const open: number = +dataToParse['02. open'];
     const high: number = +dataToParse['03. high'];
@@ -57,7 +85,8 @@ export class StockInfoService {
       +prevClose.toFixed(2),
       +change.toFixed(2),
       changePercentage,
-      boughtValue
+      boughtAt,
+      quantity
     );
     return newStock;
   }

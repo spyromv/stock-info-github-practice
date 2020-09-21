@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup]="stockDataForm" (ngSubmit)="onSubmit()">
+      <button
+        type="submit"
+        class="btn btn-primary mr-2"
+        [disabled]="!stockDataForm.valid"
+      >
+        Save
+      </button>
+      <button type="button" class="btn btn-warning mr-2" (click)="onCancel()">
+        Go back
+      </button>
+      <button
+        class="btn btn-success mr-2"
+        type="button"
+        (click)="onAddQueryItem()"
+        [disabled]="itemCount >= 5"
+      >
+        {{ itemCount >= 5 ? 'Item max reached!' : 'Add Item' }}
+      </button>
+
+      <div class="col-xs-12" formArrayName="queries">
+        <h3>Enter Symbol, Bought At value and stock quantity.</h3>
+        <div *ngIf="itemCount > 0">
+          <div class="col-xs-12">
+            <strong style="margin-right: 25px">Symbol</strong>
+            <strong style="margin-right: 13px">Bought At</strong>
+            <strong>Quantity</strong>
+          </div>
+        </div>
+        <div class="container">
+          <div
+            class="row"
+            *ngFor="let queryCtrl of getControls(); let i = index"
+            [formGroupName]="i"
+          >
+            <div class="col-xs-6">
+              <div class="form-group">
+                <input
+                  id="symbol"
+                  type="text"
+                  class="form-control"
+                  formControlName="symbol"
+                  style="max-width: 80px; margin-right: 1px"
+                />
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="form-group">
+                <input
+                  id="boughtAt"
+                  type="number"
+                  class="form-control"
+                  formControlName="boughtAt"
+                  style="max-width: 90px; margin-right: 1px"
+                />
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="form-group">
+                <input
+                  id="quantity"
+                  type="number"
+                  class="form-control"
+                  formControlName="quantity"
+                  style="max-width: 65px; margin-right: 1px"
+                />
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <button
+                (click)="onDeleteQueryItem(i)"
+                type="button"
+                class="btn btn-danger"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

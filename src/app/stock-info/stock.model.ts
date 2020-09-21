@@ -9,7 +9,8 @@ export class Stock {
   previousClose: number;
   changeInValue: number;
   changePercent: string;
-  boughtValue: number;
+  boughtAt: number;
+  quantity: number;
 
   constructor(
     symbol: string,
@@ -22,7 +23,8 @@ export class Stock {
     previousClose: number,
     changeInValue: number,
     changePercent: string,
-    boughtValue: number
+    boughtAt: number,
+    quantity: number
   ) {
     this.symbol = symbol;
     this.openingValue = openingValue;
@@ -34,6 +36,7 @@ export class Stock {
     this.previousClose = previousClose;
     this.changeInValue = changeInValue;
     this.changePercent = changePercent;
-    this.boughtValue = boughtValue;
+    this.boughtAt = boughtAt;
+    this.quantity = quantity;
   }
 }

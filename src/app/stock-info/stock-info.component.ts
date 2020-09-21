@@ -2,6 +2,7 @@ import { Stock } from './stock.model';
 import { StockInfoService } from './stock-info.service';
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-info',
@@ -20,7 +21,10 @@ export class StockInfoComponent implements OnInit {
   stocks: Stock[] = [];
   isTimeOut = false;
 
-  constructor(private stockInfoService: StockInfoService) {}
+  constructor(
+    private stockInfoService: StockInfoService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.stockInfoService.stocksSubject.subscribe((stocks) => {
@@ -32,5 +36,9 @@ export class StockInfoComponent implements OnInit {
     this.stockInfoService.getStocks();
     this.isTimeOut = true;
     setTimeout(() => (this.isTimeOut = false), 60000);
+  }
+
+  onGoToQueries(): void {
+    this.router.navigate(['/queries']);
   }
 }
