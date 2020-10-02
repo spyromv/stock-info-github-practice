@@ -69,10 +69,18 @@ export class StockInfoService {
     const low: number = +dataToParse['04. low'];
     const price: number = +dataToParse['05. price'];
     const volume = dataToParse['06. volume'];
-    const latestTrade = dataToParse['07. latest trading day'];
+    const latestTrade: string = dataToParse['07. latest trading day'];
     const prevClose: number = +dataToParse['08. previous close'];
     const change: number = +dataToParse['09. change'];
     const changePercentage = dataToParse['10. change percent'];
+
+    const splitLatestTrade = latestTrade.split('-');
+    const flippedLatestTrade =
+      splitLatestTrade[2] +
+      '-' +
+      splitLatestTrade[1] +
+      '-' +
+      splitLatestTrade[0];
 
     const newStock = new Stock(
       symbol,
@@ -81,7 +89,7 @@ export class StockInfoService {
       +low.toFixed(2),
       +price.toFixed(2),
       volume,
-      latestTrade,
+      flippedLatestTrade,
       +prevClose.toFixed(2),
       +change.toFixed(2),
       changePercentage,
